@@ -1,0 +1,13 @@
+services:
+  backendapp:
+    image: romuloass/pucpratica2k8s:backendapp
+    build:
+      context: ./
+      dockerfile: dockerfiles/backend.dockerfile
+    container_name: backendapp
+  frontendapp:
+    image: romuloass/pucpratica2k8s:frontendapp
+    build:
+      context: ./
+      dockerfile: dockerfiles/frontend.dockerfile
+    container_name: frontendapp
