@@ -7,5 +7,5 @@ db/*
 *.pyo
 bin/
 *.lock
-/secrets/*
+/chart-bkp/
 
