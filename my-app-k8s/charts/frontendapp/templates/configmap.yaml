@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "frontend.fullname" . }}-configmap
+data:
+  REACT_APP_BACKEND_URL: "http://{{ .Values.ingress.host }}"
+  #value: "http://{{ printf "%s-%s-%s" .Release.Name .Values.backend.service.name "backend" | trunc 63 | trimSuffix "-" }}:{{ .Values.backend.service.port }}"

@@ -18,7 +18,7 @@ COPY ./apps/frontend/ .
 
 # Define a variável de ambiente para a URL do backend
 ARG REACT_APP_BACKEND_URL
-ENV REACT_APP_BACKEND_URL=${REACT_APP_BACKEND_URL:-http://localhost} 
+ENV REACT_APP_BACKEND_URL=$REACT_APP_BACKEND_URL
 
 # Compila o aplicativo React para produção
 RUN npm run build
@@ -30,10 +30,14 @@ FROM nginx:1.27-alpine
 COPY --from=build /app/build /usr/share/nginx/html
 
 # Copia o arquivo nginx.conf e substitui o conteúdo de /etc/nginx/nginx.conf
-COPY ./apps/frontend/nginx.conf /etc/nginx/nginx.conf
+COPY ./apps/frontend/nginx.conf /etc/nginx/nginx.template
 
-# Expõe a porta 80 para o servidor Nginx
-EXPOSE 80/tcp
+COPY ./apps/frontend/start-nginx.sh /start-nginx.sh
+
+RUN chmod +x start-nginx.sh
+
+# Expõe a porta 8080 para o servidor Nginx
+EXPOSE 8080/tcp
 
 # Inicia o Nginx quando o contêiner for executado
-CMD ["nginx", "-g", "daemon off;"]
+CMD ["sh", "-c", "/start-nginx.sh"]

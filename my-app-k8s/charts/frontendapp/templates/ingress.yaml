@@ -1,0 +1,33 @@
+{{- if .Values.ingress.enabled }}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ include "frontend.fullname" . }}-ingress
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: {{ .Values.ingress.host }}
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ include "frontend.fullname" . }}
+                port: 
+                  number: {{ .Values.service.port }}
+          - path: /create
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ printf "%s-%s-%s" .Release.Name .Values.backend.service.name "backend" | trunc 63 | trimSuffix "-" }}
+                port: 
+                  number: {{ .Values.backend.service.port }}
+          - path: /guess
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ printf "%s-%s-%s" .Release.Name .Values.backend.service.name "backend" | trunc 63 | trimSuffix "-" }}
+                port: 
+                  number: {{ .Values.backend.service.port }}
+{{- end }}
