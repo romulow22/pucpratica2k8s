@@ -12,6 +12,10 @@ spec:
       labels:
         {{- include "backend.selectorLabels" . | nindent 8 }}
     spec:
+      initContainers:
+        - name: wait-for-postgres
+          image: busybox
+          command: ['sh', '-c', 'until nc -z -v -w30 {{ printf "%s-%s-%s" .Release.Name .Values.database.service.name "database" | trunc 63 | trimSuffix "-" }} 5432; do echo "Waiting for postgres..."; sleep 5; done']
       containers:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
